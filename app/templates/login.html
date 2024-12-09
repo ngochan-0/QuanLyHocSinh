@@ -1,0 +1,24 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Đăng Nhập{% endblock %}
+
+<!--{% block content %}-->
+<div class="container-login">
+    <form action="/login" method="post">
+        <div class="mb-3 mt-3">
+      <label for="vaitro" class="form-label">Vai Trò:</label>
+      <input required type="text" class="form-control" id="vaitro" placeholder="vai trò người dùng" name="vaitro">
+    </div>
+    <div class="mb-3 mt-3">
+      <label for="username" class="form-label">Tên tài khoản:</label>
+      <input required type="text" class="form-control" id="username" placeholder="Tên đăng nhâp" name="username">
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Mật Khẩu:</label>
+      <input required type="password" class="form-control" id="password" placeholder="Mật khẩu" name="password">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+<!--{% endblock %}-->
