@@ -1,0 +1,70 @@
+{% extends 'layout/base.html' %}
+
+
+{% block title %}Trang Tiếp nhận học sinh{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/tiepnhan.css"/>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column">
+    <div class="header">
+        HỆ THỐNG QUẢN LÝ HỌC SINH
+    </div>
+    <div>
+        <div class="d-flex main">
+        <div class="sidebar">
+            <h2>Trang chủ</h2>
+            <a href="#"><i class="fa-solid fa-book-open"></i> Tiếp nhận học sinh</a>
+            <a href="#"><i class="fa-solid fa-pen"></i> Điều chỉnh lớp học</a>
+            <a href="#"><i class="fa-solid fa-person"></i> Nhân viên trường</a>
+            <div class="logout">
+                <a href="#"
+                   style="color: white; background-color: #5064e2; padding: 10px; border-radius: 5px; text-align: center;">Đăng
+                    xuất</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex item-9">
+        <div class="content m-0">
+            <div class="main-content">
+                <div class="form-container">
+                    <h2>TIẾP NHẬN HỌC SINH</h2>
+                    <div class="form-group">
+                        <label for="name">Họ và tên:</label>
+                        <input type="text" id="name" placeholder="Nhập họ và tên">
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Ngày sinh:</label>
+                        <input type="date" id="dob">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại:</label>
+                        <input type="text" id="phone" placeholder="Nhập số điện thoại">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Giới tính:</label>
+                        <input type="text" id="gender" placeholder="Nhập giới tính">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa chỉ:</label>
+                        <input type="text" id="address" placeholder="Nhập địa chỉ">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" placeholder="Nhập email">
+                    </div>
+                    <div class="form-buttons">
+                        <button class="save">Lưu</button>
+                        <button class="exit">Thoát</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+{% endblock %}

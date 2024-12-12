@@ -108,3 +108,7 @@ body {
     padding: 20px;
     flex: 1;
 }
+.container-my{
+    margin: auto;
+    width: 40%;
+}

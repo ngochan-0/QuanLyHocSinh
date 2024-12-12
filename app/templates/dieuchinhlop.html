@@ -1,0 +1,103 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Điều chỉnh lớp học{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/dieuchinhlop.css"/>
+{% endblock %}
+
+{% block content %}
+<div class="">
+    <div class="header">
+        HỆ THỐNG QUẢN LÝ HỌC SINH
+    </div>
+    <div>
+        <div class="d-flex main">
+            <div class="sidebar">
+                <h2>Trang chủ</h2>
+                <a href="#"><i class="fa-solid fa-book-open"></i> Tiếp nhận học sinh</a>
+                <a href="#"><i class="fa-solid fa-pen"></i> Điều chỉnh lớp học</a>
+                <a href="#"><i class="fa-solid fa-person"></i> Nhân viên trường</a>
+                <div class="logout">
+                    <a href="#"
+                       style="color: white; background-color: #5064e2; padding: 10px; border-radius: 5px; text-align: center;">Đăng
+                        xuất</a>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex item-9">
+            <div class="content m-0">
+                <div class="main-content">
+                    <div class="form-container">
+                        <h2>ĐIỀU CHỈNH LỚP HỌC</h2>
+                        <form action="/dieuchinhlop" method="post">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Lớp</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1"
+                                       aria-describedby="emailHelp" placeholder="Nhập vào tên lớp">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Tìm lớp</button>
+                        </form>
+                        <div class="mt-4 ">
+                            <span class="si-so border-ss p-2">Sĩ số: 40</span>
+                        </div>
+
+                        <table class="table table-bordered mt-3">
+                            <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Họ và tên</th>
+                                <th>Giới tính</th>
+                                <th>Năm sinh</th>
+                                <th>Địa chỉ</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><input type="button" value="Xóa" class="btn btn-danger"/></td>
+                                <td><input type="button" value="Sửa" class="btn btn-success"/></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><input type="button" value="Xóa" class="btn btn-danger"/></td>
+                                <td><input type="button" value="Sửa" class="btn btn-success"/></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><input type="button" value="Xóa" class="btn btn-danger"/></td>
+                                <td><input type="button" value="Sửa" class="btn btn-success"/></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><input type="button" value="Xóa" class="btn btn-danger"/></td>
+                                <td><input type="button" value="Sửa" class="btn btn-success"/></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <input type="button" value="Thoát" class="btn btn-info"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

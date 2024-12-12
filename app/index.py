@@ -5,8 +5,14 @@ from flask import render_template
 def home():
     return render_template('home.html')
 
+@app.route('/tiepnhan')
+def tiepnhan():
 
+    return render_template('tiepnhan.html')
 
+@app.route('/dieuchinhlop')
+def dieuchinhlop():
+    return render_template('dieuchinhlop.html')
 
 @app.route('/login', methods=['post', 'get'])
 def signin():
