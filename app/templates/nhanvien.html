@@ -1,0 +1,33 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Nhân Viên{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/nhanvien.css"/>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="sidebar">
+        <h2>Trường THPT Nguyễn Trãi</h2>
+        <ul>
+            <li><a href="#home"><i class="fa-solid fa-house"></i> Trang chủ</a></li>
+            <li><a href="/tiepnhan"><i class="fa-solid fa-book-open"></i> Tiếp nhận học sinh</a></li>
+            <li><a href="/dieuchinhlop"><i class="fa-solid fa-pen"></i> Điều chỉnh lớp học</a></li>
+            <br>
+            <br>
+            <br>
+            <br>
+            <li><a href="#"><i class="fa-solid fa-person"></i> Nhân viên trường</a></li>
+            <div class="logout">
+                <li><a href="#"
+                       style="color: white; background-color: #5064e2; padding: 10px; border-radius: 5px; text-align: center;">Đăng
+                    xuất</a></li>
+            </div>
+        </ul>
+    </div>
+</div>
+<div class="content">
+</div>
+
+{% endblock %}

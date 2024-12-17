@@ -1,69 +1,55 @@
-* {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
         body {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
             font-family: Arial, sans-serif;
         }
-
-        .header {
-            background-color: #000099;
-            color: white;
-            text-align: center;
+        .container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 30px;
-            height: 70px;
-            flex-shrink: 0;
-            font-size: 50px;
-        }
-
-
-        .main{
-            flex: 1;
+            height: 100vh; /* Chiều cao toàn màn hình */
         }
         .sidebar {
-            background-color: #BBBBBB;
-            color: black;
-            width: 250px;
+            width: 25%; /* Chiếm 30% màn hình */
+            background-color: #003366;
+            color: #FFFFFF; /* Màu chữ trong sidebar */
             padding: 20px;
-            overflow-y: auto;
         }
-        .sidebar a {
-            font-size: 20px;
-            display: block;
-            margin-bottom: 50px;
-            margin-left: 0;
-        }
-        .content {
-            flex-grow: 1;
-            background-color: #fff;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .main-content {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .form-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-container h2 {
+        .sidebar h2 {
             text-align: center;
             margin-bottom: 20px;
+            border-bottom: 1px solid #34495e;
+            padding-bottom: 10px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 23px;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #777777;/* Di chuyen chuot do la no dam len */
+        }
+
+        .content {
+            width: 75%; /* Chiếm 70% màn hình */
+            background-color: #f4f4f4; /* Màu nền content */
+            padding: 20px;
+        }
+
+        .content h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
 
         .form-group {
@@ -107,9 +93,3 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .container {
-            height: 100%;
-        }
-.item-9{
-    flex:9;
-}

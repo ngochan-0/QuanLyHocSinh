@@ -1,5 +1,4 @@
-
-        body {
+body {
             font-family: Arial, sans-serif;
         }
         .container {
@@ -44,23 +43,4 @@
             width: 75%; /* Chiếm 70% màn hình */
             background-color: #f4f4f4; /* Màu nền content */
             padding: 20px;
-        }
-
-        .content h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
-        .siso{
-             font-size: 20;
-             font-weight: 20;
-        }
-        .border-ss{
-             border: 1px solid black;
-             border-radius: 5px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-            font-size: 20px;
         }

@@ -5,9 +5,12 @@ from flask import render_template
 def home():
     return render_template('home.html')
 
+@app.route('/nhanvien')
+def nhanvien():
+    return render_template('nhanvien.html')
+
 @app.route('/tiepnhan')
 def tiepnhan():
-
     return render_template('tiepnhan.html')
 
 @app.route('/dieuchinhlop')
