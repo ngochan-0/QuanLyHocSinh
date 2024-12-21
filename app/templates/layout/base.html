@@ -12,15 +12,21 @@
     {% block css %}{% endblock %}
 </head>
 <body>
+<div class="container">
+    <div class="sidebar">
+        {% block header %}
+        {% include 'layout/header.html' %}
+        {% endblock %}
+    </div>
+    <div class="content">
+       {% block content %}
+        {% endblock %}
 
-{% block header %}
-{% include 'layout/header.html' %}
-{% endblock %}
+    </div>
+</div>
 
 
-{% block content %}
-{% include 'layout/home.html' %}
-{% endblock %}
+
 
 
 {% block footer %}
