@@ -8,15 +8,14 @@ from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 
 
+class Base(db.Model):
+    __abstract__ = True
+    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
+
 class UserRoleEnum(enum.Enum):
     ADMIN = 1
     STAFF = 2
     TEACHER = 3
-
-
-class Base(db.Model):
-    __abstract__ = True
-    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
 
 class User(Base, UserMixin):
     hoTen_u = Column(String(50), nullable=False)
@@ -24,119 +23,99 @@ class User(Base, UserMixin):
     email_u = Column(String(50), nullable=False, unique=True)
     sdt_u = Column(String(12), nullable=False)
     matKhau_u = Column(String(50), nullable=False)
-    tenDangNhap = Column(String(150), nullable=False, unique=True)
-    user_role = Column(Enum(UserRoleEnum), default=UserRoleEnum.TEACHER)
+    tenDangNhap = Column(String(150), nullable=False, unique=True)#unique giong primarykey nhung duoc phep thay doi
+    user_role = Column(Enum(UserRoleEnum))
 
-    def __str__(self):
-        self.name
 
+class GiaoVien(User):
+    giaoVien_id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
+    user_id = Column(Integer, ForeignKey(User.id),unique=True)
+    boMon = Column(String(50), nullable=False)
+    lichDay = relationship('LichDay', backref='giaovien', lazy=True)
+    diem=relationship('Diem',backref='giao_vien',lazy=True)
+    lichDay = relationship('LichDay', backref='giaovien', lazy=True)
 
 class QuanTriVien(User):
     admin_id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
-    user_id = Column(Integer, ForeignKey(User.id), unique=True)
+    user_id = Column(Integer, ForeignKey(User.id),unique=True)
     vaiTro = Column(String(50), nullable=False)
-
 
 class NhanVienTruong(User):
     nv_id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
-    user_id = Column(Integer, ForeignKey(User.id), unique=True)
+    user_id = Column(Integer, ForeignKey(User.id),unique=True)
     vaiTro = Column(String(50), nullable=False)
 
-
-class Khoi(db.Model):
-    khoi_id = Column(Integer, primary_key=True, autoincrement=True)
-    tenKhoi = Column(Enum('Grade 10', 'Grade 11', 'Grade 12'), nullable=False)
-    lop = relationship('Lop', backref='Khoi', lazy=True)
-    students = relationship('HocSinh', backref='Khoi', lazy=True)
-
+class Khoi(Base):
+    tenKhoi=Column(String(50),nullable=False)
+    lop= relationship('Lop', backref='khoi', lazy=True)
 
 class QuyDinh(Base):
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    tenQD = Column(String(50), nullable=False)
+    tenQD=Column(String(50),nullable=False)
     moTa = Column(String(50), nullable=False)
-
 
 class Lop(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     tenLop = Column(String(50), nullable=False)
-    khoi_id = Column(Integer, ForeignKey(Khoi.khoi_id), nullable=False)
+    khoi_id=Column(Integer,ForeignKey(Khoi.id),nullable=False)
+    lichDay = relationship('LichDay', backref='lop', lazy=True)
+    hs_lop = relationship('HocSinh', lazy=True, backref='lop')
 
-
-class HocKi(db.Model):
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    tenHK = Column(String(50), nullable=False)
-    namHoc = Column(String(50), nullable=False)
-    tests = relationship('Test', backref='HocKi', lazy=True)
-
-
-class HocSinh(db.Model):
-    id = Column(Integer, primary_key=True, autoincrement=True)
+class HocSinh(Base):
     tenHs = Column(String(50), nullable=False)
-    ngaysinh = Column(DateTime, nullable=False)
+    ngaysinh = Column(Date, nullable=False)
     gioiTinh = Column(Enum('Nam', 'Nữ'), nullable=False)
     email = Column(String(50), nullable=False, unique=True)
-    phone = Column(String(12), nullable=False)
-    diaChi = Column(String(255), nullable=False)
-    khoi_id = Column(Integer, ForeignKey(Khoi.khoi_id), nullable=False)
+    phone = Column(String(12),nullable=False)
+    diaChi = Column(String(255),nullable=False)
+    lop_id = Column(Integer, ForeignKey(Lop.id))
 
 
-class MonHoc(db.Model):
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    tenMH = Column(String(100), nullable=False)
-    tests = relationship('Test', backref='MonHoc', lazy=True)
+class MonHoc(Base):
+    tenMH=Column(String(50),nullable=False)
+    lichDay = relationship('LichDay', backref='monhoc', lazy=True)
+
+class Diem(Base):
+    loaiDiem=Column(String(50),nullable=False)
+    diem=Column(Float,nullable=False)
+    hs_mh=relationship('HocSinhMonHoc',backref='diem',lazy=True)
+    gv_id=Column(Integer,ForeignKey(GiaoVien.giaoVien_id),nullable=False)
+
+class HocKi(Base):
+    tenHK=Column(String(50),nullable=False)
+    namHoc=Column(String(50),nullable=False)
+    hs_lop=relationship('HocSinhLop',backref='hoc_ki',lazy=True)
+
+class HocSinhMonHoc(Base):
+    mh_id  =  Column(Integer, ForeignKey(MonHoc.id))
+    hs_id = Column(Integer, ForeignKey(HocSinh.id))
+    diem_id =  Column( Integer, ForeignKey(Diem.id), nullable=False)
 
 
-teachers = relationship('GiaoVien', backref='MonHoc', lazy=True)
+class LichDay(Base):
+    lop_id = Column(Integer, ForeignKey(Lop.id))
+    monhoc_id = Column(Integer, ForeignKey(MonHoc.id), nullable=False)
+    giaovien_id = Column(Integer, ForeignKey(GiaoVien.giaoVien_id), nullable=False)
 
 
-class GiaoVien(db.Model):
-    giaoVien_id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
-    user_id = Column(Integer, ForeignKey(User.id), unique=True)
-    boMon = Column(String(50), nullable=False)
-    monHoc_id = Column(Integer, ForeignKey(MonHoc.id), nullable=False)
-    tests = relationship('Test', backref='GiaoVien', lazy=True)
-
-
-class Test(db.Model):
-    id_test = Column(Integer, primary_key=True, autoincrement=True)
-    type = Column(Enum('15 phút', '1 tiết', 'Cuối kỳ'), nullable=False)
-    diemm = Column(Float, nullable=False)
-    hs_id = Column(Integer, ForeignKey(HocSinh.id), nullable=False)
-    monHoc_id = Column(Integer, ForeignKey(MonHoc.id), nullable=False)
-    hocKi_id = Column(Integer, ForeignKey(HocKi.id), nullable=False)
-    giaoVien_id = Column(Integer, ForeignKey(GiaoVien.giaoVien_id), nullable=False)
-
-
-Lop_GiaoVien = db.Table('Lop_GiaoVien',
-                        Column('lop_id', Integer, ForeignKey(HocSinh.id), primary_key=True),
-                        Column('GiaoVien_id', Integer, ForeignKey(GiaoVien.giaoVien_id), primary_key=True))
-
-hs_mh = db.Table('hs_mh',
-                 Column('hs_id', Integer, ForeignKey(HocSinh.id), primary_key=True),
-                 Column('monHoc_id', Integer, ForeignKey(MonHoc.id), primary_key=True))
-
-hs_lop = db.Table('hs_lop',
-                  Column('hs_id', Integer, ForeignKey(HocSinh.id), primary_key=True),
-                  Column('lop_id', Integer, ForeignKey(Lop.id), primary_key=True))
+class HocSinhLop(Base):
+    hs_id = Column( Integer, ForeignKey(HocSinh.id))
+    lop_id = Column(Integer, ForeignKey(Lop.id))
+    hocki_id = Column(Integer, ForeignKey(HocKi.id))
 
 if __name__ == '__main__':
     with app.app_context():
         # pass
         # db.drop_all()
         # db.create_all()
-        #
-        # u1 = User(hoTen_u="Diem", gioiTinh_u=0, email_u="diem@gmail.com", sdt_u="093444111",
-        #           matKhau_u=str(hashlib.md5('123'.strip().encode('utf-8')).hexdigest()), tenDangNhap='diem')
-        # u2 = User(hoTen_u="Yen", gioiTinh_u=0, email_u="Yen@gmail.com", sdt_u="093412344",
-        #           matKhau_u=str(hashlib.md5('123'.strip().encode('utf-8')).hexdigest()), tenDangNhap='yen')
-        # u3 = User(hoTen_u="Duy", gioiTinh_u=1, email_u="duy@gmail.com", sdt_u="093412322",
-        #           matKhau_u=str(hashlib.md5('123'.strip().encode('utf-8')).hexdigest()), tenDangNhap='duy')
-        #
-        # db.session.add_all( [u1, u2, u3])
-        # db.session.commit()
 
-
-
+        u1 = User(hoTen_u="Diem", gioiTinh_u=0, email_u="diem@gmail.com", sdt_u="093444111",
+                  matKhau_u=str(hashlib.md5('123'.strip().encode('utf-8')).hexdigest()), tenDangNhap='diem', user_role='TEACHER')
+        u2 = User(hoTen_u="Yen", gioiTinh_u=0, email_u="Yen@gmail.com", sdt_u="093412344",
+                  matKhau_u=str(hashlib.md5('123'.strip().encode('utf-8')).hexdigest()), tenDangNhap='yen', user_role='ADMIN')
+        u3 = User(hoTen_u="Duy", gioiTinh_u=1, email_u="duy@gmail.com", sdt_u="093412322",
+                  matKhau_u=str(hashlib.md5('123'.strip().encode('utf-8')).hexdigest()), tenDangNhap='duy', user_role='STAFF')
+        db.session.add_all( [u1, u2, u3])
+        db.session.commit()
 
         grade1 = Khoi(tenKhoi='Grade 10')
         grade2 = Khoi(tenKhoi='Grade 11')
@@ -155,6 +134,7 @@ if __name__ == '__main__':
         c9 = Lop(tenLop='12A3', khoi_id=3)
         db.session.add_all([c1, c2, c3, c4, c5, c6, c7, c8, c9])
         db.session.commit()
+
         s1 = MonHoc(tenMH="Ngữ văn")
         s2 = MonHoc(tenMH="Toán")
         s3 = MonHoc(tenMH="Ngoại ngữ")

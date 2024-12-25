@@ -8,69 +8,84 @@
 
 {% block content %}
 
-    <h2>ĐIỀU CHỈNH LỚP HỌC</h2>
-    <div class="form-group">
-        <label for="name">Lớp</label>
-        <input type="text" class="form-control" id="name"
-               aria-describedby="emailHelp" placeholder="Nhập vào tên lớp">
-    </div>
-    <button type="submit" class="btn btn-primary">Tìm lớp</button>
-    <br>
-    <div class="siso mt-4">
-        <span class="siso border-ss p-2">Sĩ số: 40</span>
-    </div>
-    <table class="table table-bordered mt-3">
-        <thead>
-        <tr>
-            <th>STT</th>
-            <th>Họ và tên</th>
-            <th>Giới tính</th>
-            <th>Năm sinh</th>
-            <th>Địa chỉ</th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>1</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><input type="button" value="Xóa" style="color: #DD0000; font-weight: bold;"/></td>
-            <td><input type="button" value="Sửa" style="color: #009900; font-weight: bold;"/></td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><input type="button" value="Xóa" style="color: #DD0000; font-weight: bold;"/></td>
-            <td><input type="button" value="Sửa" style="color: #009900; font-weight: bold;"/></td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><input type="button" value="Xóa" style="color: #DD0000; font-weight: bold;"/></td>
-            <td><input type="button" value="Sửa" style="color: #009900; font-weight: bold;"/></td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><input type="button" value="Xóa" style="color: #DD0000; font-weight: bold;"/></td>
-            <td><input type="button" value="Sửa" style="color: #009900; font-weight: bold;"/></td>
-        </tr>
-        </tbody>
-    </table>
-    <input type="button" value="Thoát" class="btn btn-info"/>
+<h2>ĐIỀU CHỈNH LỚP HỌC</h2>
+<div class="form-group">
+    <input type="text" class="form-control" id="name"
+           aria-describedby="emailHelp" placeholder="Nhập vào tên học sinh cần điều chỉnh">
+</div>
+<button type="submit" class="btn btn-primary">Tìm</button>
+<br>
+<table class="table table-bordered mt-3">
+    <thead>
+    <tr>
+        <th>Mã HS</th>
+        <th>Họ và tên</th>
+        <th>Lớp</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<label for="name">Danh sách lớp học</label>
+<table class="table table-bordered mt-3">
+    <thead>
+    <tr>
+        <th>Mã Lớp</th>
+        <th>Tên lớp</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<div class="form-group">
+    <input type="text" class="form-control" id="id_hocsinh"
+           aria-describedby="emailHelp" placeholder="Nhập vào mã học sinh cần điều chỉnh">
+</div>
+<br>
+<div class="form-group">
+    <input type="text" class="form-control" id="id_lop"
+           aria-describedby="emailHelp" placeholder="Nhập vào mã lớp cần chuyển đến">
+</div>
+
+<input type="button" value="Chuyển" class="btn btn-info"/>
 
 
 {% endblock %}

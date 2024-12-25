@@ -4,7 +4,7 @@ import dao
 from flask_login import login_user, current_user, logout_user
 from datetime import datetime
 import hashlib
-from app.model import Test, MonHoc, HocKi, Lop, HocSinh, UserRoleEnum
+from app.model import Diem, MonHoc, HocKi, Lop, HocSinh, UserRoleEnum
 
 
 @app.route('/', methods=['get'])
@@ -68,10 +68,36 @@ def signin():
                     return redirect('/nhanvien')
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect('/login')
+
+
+@app.route("/api/searchStudent", methods=['POST'])
+def SearchStudent():
+    if request.method.__eq__('POST'):
+        name = request.json.get('searchstudent')
+        students = dao.get_student_by_name(name)
+        stu = {}
+        stu[0] = {"quantity": len(students)}
+
+        for i in range(1, len(students) + 1):
+            if students[i - 1].id_class:
+                stu[i] = {
+                    "id": students[i - 1].id,
+                    "name": students[i - 1].name,
+                    "class": students[i - 1].Class.name_class
+                }
+            else:
+                stu[i] = {
+                    "id": students[i - 1].id,
+                    "name": students[i - 1].name,
+                    "class": "Chưa có lớp"
+                }
+
+        return stu
 
 
 @app.route('/api/luudiem', methods=['post'])
@@ -94,7 +120,7 @@ def LuuDiem():
 
     # Delete existing test records
     for s in HocSinh:
-        tests = Test.query.filter(Test.hs_id == s.id, Test.monHoc_id == monHoc_id, Test.hocKi_id == hocKi_id).all()
+        tests = Diem.query.filter(Diem.hs_id == s.id, Diem.monHoc_id == monHoc_id, Diem.hocKi_id == hocKi_id).all()
         for t in tests:
             db.session.delete(t)
             db.session.commit()
@@ -109,7 +135,7 @@ def LuuDiem():
                 type = '1 tiết'
             else:
                 type = 'Cuối kỳ'
-            test = Test(type=type, score=round(float(stu[i][j]), 1), hs_id=HocSinh[i].id,
+            test = Diem(type=type, score=round(float(stu[i][j]), 1), hs_id=HocSinh[i].id,
                         monHoc_id=monHoc_id, hocKi_id=hocKi_id)
             db.session.add(test)
             db.session.commit()
@@ -214,7 +240,6 @@ def Themhocsinh():
     gioiTinh = request.form.get('gioiTinh')
     ngaysinh = request.form.get('ngaysinh')
 
-
     diaChi = str(request.form.get('diaChi'))
     phone = request.form.get('phone')
     email = request.form.get('email')
@@ -237,11 +262,13 @@ def Themhocsinh():
         return render_template('tiepnhan.html', err_msg=err_msg)
 
     student = HocSinh(tenHs=tenHs, gioiTinh=gioiTinh, ngaysinh=ngaysinh, diaChi=diaChi, phone=phone,
-              email=email, khoi_id=khoi)
-    db.session.add(student)
+                      email=email)
+    khoi = Lop(khoi_id=khoi)
+    db.session.add(student, khoi)
     db.session.commit()
     err_msg = 'Lưu thành công'
     return render_template('tiepnhan.html', err_msg=err_msg)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
