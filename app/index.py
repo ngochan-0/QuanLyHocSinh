@@ -34,12 +34,12 @@ def dieuchinhlop():
 
 @app.route("/nhapdiem")
 def nhapdiem():
-    return render_template('nhapdiem.html', lops=dao.get_Lop(), MonHocs=dao.get_MonHoc(), HocKis=dao.get_HocKi())
+    return render_template('nhapdiem.html')
 
 
 @app.route("/xuatdiem")
 def xuatdiem():
-    return render_template('xuatdiem.html', lops=dao.get_Lop(), HocKis=dao.get_HocKi())
+    return render_template('xuatdiem.html')
 
 
 @app.route('/login', methods=['post', 'get'])
@@ -54,7 +54,7 @@ def signin():
                 role = UserRoleEnum.TEACHER
                 u = dao.check_login(username=username, password=password, role=role)
                 login_user(u)
-                return redirect('/')
+                return redirect('/giaovien')
             else:
                 if role.__eq__('ADMIN'):
                     role = UserRoleEnum.ADMIN
