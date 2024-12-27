@@ -1,4 +1,4 @@
-{% extends 'layout/base.html' %}
+{% extends 'layout/base_nv.html' %}
 
 {% block title %}Điều chỉnh{% endblock %}
 
@@ -10,82 +10,90 @@
 
 <h2>ĐIỀU CHỈNH LỚP HỌC</h2>
 <div class="form-group">
-    <input type="text" class="form-control" id="name"
-           aria-describedby="emailHelp" placeholder="Nhập vào tên học sinh cần điều chỉnh">
-</div>
-<button type="submit" class="btn btn-primary">Tìm</button>
-<br>
-<table class="table table-bordered mt-3">
-    <thead>
-    <tr>
-        <th>Mã HS</th>
-        <th>Họ và tên</th>
-        <th>Lớp</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    </tbody>
-</table>
-<br>
-<label for="name">Danh sách lớp học</label>
-<table class="table table-bordered mt-3">
-    <thead>
-    <tr>
-        <th>Mã Lớp</th>
-        <th>Tên lớp</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-    </tr>
-    </tbody>
-</table>
-<br>
-<div class="form-group">
-    <input type="text" class="form-control" id="id_hocsinh"
-           aria-describedby="emailHelp" placeholder="Nhập vào mã học sinh cần điều chỉnh">
-</div>
-<br>
-<div class="form-group">
-    <input type="text" class="form-control" id="id_lop"
-           aria-describedby="emailHelp" placeholder="Nhập vào mã lớp cần chuyển đến">
+    <div class="row">
+        <div class="col-md-6">
+            <input type="text" class="form-control" id="name"
+                   aria-describedby="emailHelp" placeholder="Nhập vào tên học sinh cần điều chỉnh">
+        </div>
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-primary">Tìm</button>
+        </div>
+    </div>
+    <table class="table table-bordered mt-3">
+        <thead>
+        <tr>
+            <th>Mã HS</th>
+            <th>Họ và tên</th>
+            <th>Lớp</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+    <table class="table table-bordered mt-3">
+        <thead>
+        <tr>
+            <th>Mã Lớp</th>
+            <th>Tên lớp</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-md-6">
+            <label class="form-label">ID học sinh</label>
+            <input type="text" class="form-control" id="hs_id" placeholder="" name="hs_id">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">ID lớp chuyển đến</label>
+            <input type="text" class="form-control" id="lop_id" placeholder="" name="lop_id">
+
+        </div>
+
+    </div>
+
+    <div class="form-group d-flex justify-content-start mt-3">
+        <button type="submit" class="btn btn-primary me-2" onclick="changeClass()" id="btn_changeClass">
+            Chuyển
+        </button>
+    </div>
 </div>
 
-<input type="button" value="Chuyển" class="btn btn-info"/>
-
-
-{% endblock %}
+    {% endblock %}

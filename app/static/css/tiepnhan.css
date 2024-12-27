@@ -44,16 +44,17 @@
             width: 75%; /* Chiếm 70% màn hình */
             background-color: #f4f4f4; /* Màu nền content */
             padding: 20px;
+            font-size: 15px;
         }
 
         .content h2 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-weight: bold;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .form-group label {

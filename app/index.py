@@ -11,7 +11,6 @@ from app.model import Diem, MonHoc, HocKi, Lop, HocSinh, UserRoleEnum
 def home():
     return render_template('home.html')
 
-
 @app.route('/nhanvien')
 def nhanvien():
     return render_template('nhanvien.html')
@@ -75,200 +74,200 @@ def logout():
     return redirect('/login')
 
 
-@app.route("/api/searchStudent", methods=['POST'])
-def SearchStudent():
-    if request.method.__eq__('POST'):
-        name = request.json.get('searchstudent')
-        students = dao.get_student_by_name(name)
-        stu = {}
-        stu[0] = {"quantity": len(students)}
-
-        for i in range(1, len(students) + 1):
-            if students[i - 1].id_class:
-                stu[i] = {
-                    "id": students[i - 1].id,
-                    "name": students[i - 1].name,
-                    "class": students[i - 1].Class.name_class
-                }
-            else:
-                stu[i] = {
-                    "id": students[i - 1].id,
-                    "name": students[i - 1].name,
-                    "class": "Chưa có lớp"
-                }
-
-        return stu
-
-
-@app.route('/api/luudiem', methods=['post'])
-def LuuDiem():
-    stu = request.json.get('scores')
-    monHoc_id = request.json.get('MonHoc.id')
-    hocKi_id = request.json.get('HocKi.id')
-    lop_id = request.json.get('Lop.id')
-    num_row_15m = len(session['num_test']['num_row_15m'])
-    num_row_45m = len(session['num_test']['num_row_45m'])
-    HocSinh = dao.get_student_by_class(session['num_test']['lop_id'])
-
-    # Validate input scores
-    for i in range(len(stu)):
-        for j in range(num_row_15m + num_row_45m + 1):
-            if not stu[i][j]:
-                return jsonify({'content': 'Có học sinh chưa nhập điểm. Vui lòng kiểm tra lại!'})
-            elif float(stu[i][j]) > 10 or float(stu[i][j]) < 0:
-                return jsonify({'content': 'Điểm không hợp lệ. Vui lòng kiểm tra lại!'})
-
-    # Delete existing test records
-    for s in HocSinh:
-        tests = Diem.query.filter(Diem.hs_id == s.id, Diem.monHoc_id == monHoc_id, Diem.hocKi_id == hocKi_id).all()
-        for t in tests:
-            db.session.delete(t)
-            db.session.commit()
-
-    # Insert new test records
-    for i in range(len(stu)):
-        for j in range(num_row_15m + num_row_45m + 1):
-            type = ''
-            if j < num_row_15m:
-                type = '15 phút'
-            elif j < (num_row_15m + num_row_45m):
-                type = '1 tiết'
-            else:
-                type = 'Cuối kỳ'
-            test = Diem(type=type, score=round(float(stu[i][j]), 1), hs_id=HocSinh[i].id,
-                        monHoc_id=monHoc_id, hocKi_id=hocKi_id)
-            db.session.add(test)
-            db.session.commit()
-
-    return jsonify({'content': 'Lưu thành công'})
-
-
-@app.route('/api/XuatDiem', methods=['post'])
-def XuatDiem():
-    lop_id = request.json.get('Lop.id')
-    hocKi_id = request.json.get('HocKi.id')
-    semester_1 = dao.calc_semester_score_average(lop_id=lop_id, hocKi_id=hocKi_id)
-    semester_2 = dao.calc_semester_score_average(lop_id=lop_id, hocKi_id=int(hocKi_id) + 1)
-    schoolyear = ''
-    if hocKi_id == '1':
-        schoolyear = 'Năm học 2020-2021'
-    elif hocKi_id == '3':
-        schoolyear = 'Năm học 2021-2022'
-    elif hocKi_id == '5':
-        schoolyear = 'Năm học 2022-2023'
-    elif hocKi_id == '7':
-        schoolyear = 'Năm học 2023-2024'
-    result = {}
-    result[0] = {
-        'quantity': len(semester_1),
-        'class': dao.get_class_by_id(lop_id).tenLop,
-        'schoolyear': schoolyear
-    }
-    for i in range(len(semester_1)):
-        result[i + 1] = {
-            'tenHS': dao.get_student_by_id(semester_1[i]['hs_id']).name,
-            'semester_1': semester_1[i]['diemm'],
-            'semester_2': semester_2[i]['diemm']
-        }
-
-    return result
-
-
-@app.route('/api/timkiemlop', methods=['post'])
-def timkiemlop():
-    lop_id = request.json.get('timkiemlop')
-    students = dao.get_student_by_class(lop_id)
-    stu = {}
-
-    stu[0] = {
-        "tenLop": students[0].Lop.tenLop,
-        "num_row_15m": request.json.get('num_row_15m'),
-        "num_row_45m": request.json.get('num_row_45m'),
-        "quantity": len(students)
-    }
-
-    for i in range(1, len(students) + 1):
-        stu[i] = {
-            "id": students[i - 1].id,
-            "name": students[i - 1].tenHs
-        }
-
-    session['num_test'] = {
-        "num_row_15m": request.json.get('num_row_15m'),
-        "num_row_45m": request.json.get('num_row_45m'),
-        "lop_id": lop_id
-    }
-
-    return stu
-
-
-@app.route('/api/Xuatdiem', methods=['post'])
-def Xuatdiem():
-    lop_id = request.json.get('lop_id')
-    hocKi_id = request.json.get('hocKi_id')
-    semester_1 = dao.calc_semester_score_average(lop_id=lop_id, hocKi_id=hocKi_id)
-    semester_2 = dao.calc_semester_score_average(lop_id=lop_id, hocKi_id=int(hocKi_id) + 1)
-    schoolyear = ''
-    if hocKi_id == '1':
-        schoolyear = 'Năm học 2020-2021'
-    elif hocKi_id == '3':
-        schoolyear = 'Năm học 2021-2022'
-    elif hocKi_id == '5':
-        schoolyear = 'Năm học 2022-2023'
-    elif hocKi_id == '7':
-        schoolyear = 'Năm học 2023-2024'
-    result = {}
-    result[0] = {
-        'quantity': len(semester_1),
-        'class': dao.get_class_by_id(lop_id).tenLop,
-        'schoolyear': schoolyear
-    }
-    for i in range(len(semester_1)):
-        result[i + 1] = {
-            'tennHS': dao.get_student_by_id(semester_1[i]['hs_id']).name,
-            'semester_1': semester_1[i]['diemm'],
-            'semester_2': semester_2[i]['diemm']
-        }
-
-    return result
-
-
-@app.route("/Themhocsinh", methods=['POST'])
-def Themhocsinh():
-    err_msg = ''
-    tenHs = request.form.get('tenHs')
-    gioiTinh = request.form.get('gioiTinh')
-    ngaysinh = request.form.get('ngaysinh')
-
-    diaChi = str(request.form.get('diaChi'))
-    phone = request.form.get('phone')
-    email = request.form.get('email')
-    khoi = request.form.get('khoi')
-    substring = email[(len(email) - 10):]
-    if len(phone) != 10:
-        err_msg = 'Số điện thoại sai. Vui lòng nhập lại!'
-        return render_template('tiepnhan.html', err_msg=err_msg)
-    if not substring.__eq__('@gmail.com'):
-        err_msg = 'Email sai. Vui lòng nhập lại!'
-        return render_template('tiepnhan.html', err_msg=err_msg)
-    try:
-        birthdate = datetime.strptime(ngaysinh, '%Y-%m-%d')
-    except:
-        err_msg = 'Bạn chưa nhập ngày sinh. Vui lòng thử lại!'
-        return render_template('tiepnhan.html', err_msg=err_msg)
-    if (app.config['nambatdau'] - birthdate.year) < app.config['mintuoi'] or (
-            app.config['nambatdau'] - birthdate.year) > app.config['maxtuoi']:
-        err_msg = 'Ngày sinh không hợp lệ. Vui lòng thử lại!'
-        return render_template('tiepnhan.html', err_msg=err_msg)
-
-    student = HocSinh(tenHs=tenHs, gioiTinh=gioiTinh, ngaysinh=ngaysinh, diaChi=diaChi, phone=phone,
-                      email=email)
-    khoi = Lop(khoi_id=khoi)
-    db.session.add(student, khoi)
-    db.session.commit()
-    err_msg = 'Lưu thành công'
-    return render_template('tiepnhan.html', err_msg=err_msg)
-
+# @app.route("/api/searchStudent", methods=['POST'])
+# def SearchStudent():
+#     if request.method.__eq__('POST'):
+#         name = request.json.get('searchstudent')
+#         students = dao.get_student_by_name(name)
+#         stu = {}
+#         stu[0] = {"quantity": len(students)}
+#
+#         for i in range(1, len(students) + 1):
+#             if students[i - 1].id_class:
+#                 stu[i] = {
+#                     "id": students[i - 1].id,
+#                     "name": students[i - 1].name,
+#                     "class": students[i - 1].Class.name_class
+#                 }
+#             else:
+#                 stu[i] = {
+#                     "id": students[i - 1].id,
+#                     "name": students[i - 1].name,
+#                     "class": "Chưa có lớp"
+#                 }
+#
+#         return stu
+#
+#
+# @app.route('/api/luudiem', methods=['post'])
+# def LuuDiem():
+#     stu = request.json.get('scores')
+#     monHoc_id = request.json.get('MonHoc.id')
+#     hocKi_id = request.json.get('HocKi.id')
+#     lop_id = request.json.get('Lop.id')
+#     num_row_15m = len(session['num_test']['num_row_15m'])
+#     num_row_45m = len(session['num_test']['num_row_45m'])
+#     HocSinh = dao.get_student_by_class(session['num_test']['lop_id'])
+#
+#     # Validate input scores
+#     for i in range(len(stu)):
+#         for j in range(num_row_15m + num_row_45m + 1):
+#             if not stu[i][j]:
+#                 return jsonify({'content': 'Có học sinh chưa nhập điểm. Vui lòng kiểm tra lại!'})
+#             elif float(stu[i][j]) > 10 or float(stu[i][j]) < 0:
+#                 return jsonify({'content': 'Điểm không hợp lệ. Vui lòng kiểm tra lại!'})
+#
+#     # Delete existing test records
+#     for s in HocSinh:
+#         tests = Diem.query.filter(Diem.hs_id == s.id, Diem.monHoc_id == monHoc_id, Diem.hocKi_id == hocKi_id).all()
+#         for t in tests:
+#             db.session.delete(t)
+#             db.session.commit()
+#
+#     # Insert new test records
+#     for i in range(len(stu)):
+#         for j in range(num_row_15m + num_row_45m + 1):
+#             type = ''
+#             if j < num_row_15m:
+#                 type = '15 phút'
+#             elif j < (num_row_15m + num_row_45m):
+#                 type = '1 tiết'
+#             else:
+#                 type = 'Cuối kỳ'
+#             test = Diem(type=type, score=round(float(stu[i][j]), 1), hs_id=HocSinh[i].id,
+#                         monHoc_id=monHoc_id, hocKi_id=hocKi_id)
+#             db.session.add(test)
+#             db.session.commit()
+#
+#     return jsonify({'content': 'Lưu thành công'})
+#
+#
+# @app.route('/api/XuatDiem', methods=['post'])
+# def XuatDiem():
+#     lop_id = request.json.get('Lop.id')
+#     hocKi_id = request.json.get('HocKi.id')
+#     semester_1 = dao.calc_semester_score_average(lop_id=lop_id, hocKi_id=hocKi_id)
+#     semester_2 = dao.calc_semester_score_average(lop_id=lop_id, hocKi_id=int(hocKi_id) + 1)
+#     schoolyear = ''
+#     if hocKi_id == '1':
+#         schoolyear = 'Năm học 2020-2021'
+#     elif hocKi_id == '3':
+#         schoolyear = 'Năm học 2021-2022'
+#     elif hocKi_id == '5':
+#         schoolyear = 'Năm học 2022-2023'
+#     elif hocKi_id == '7':
+#         schoolyear = 'Năm học 2023-2024'
+#     result = {}
+#     result[0] = {
+#         'quantity': len(semester_1),
+#         'class': dao.get_class_by_id(lop_id).tenLop,
+#         'schoolyear': schoolyear
+#     }
+#     for i in range(len(semester_1)):
+#         result[i + 1] = {
+#             'tenHS': dao.get_student_by_id(semester_1[i]['hs_id']).name,
+#             'semester_1': semester_1[i]['diemm'],
+#             'semester_2': semester_2[i]['diemm']
+#         }
+#
+#     return result
+#
+#
+# @app.route('/api/timkiemlop', methods=['post'])
+# def timkiemlop():
+#     lop_id = request.json.get('timkiemlop')
+#     students = dao.get_student_by_class(lop_id)
+#     stu = {}
+#
+#     stu[0] = {
+#         "tenLop": students[0].Lop.tenLop,
+#         "num_row_15m": request.json.get('num_row_15m'),
+#         "num_row_45m": request.json.get('num_row_45m'),
+#         "quantity": len(students)
+#     }
+#
+#     for i in range(1, len(students) + 1):
+#         stu[i] = {
+#             "id": students[i - 1].id,
+#             "name": students[i - 1].tenHs
+#         }
+#
+#     session['num_test'] = {
+#         "num_row_15m": request.json.get('num_row_15m'),
+#         "num_row_45m": request.json.get('num_row_45m'),
+#         "lop_id": lop_id
+#     }
+#
+#     return stu
+#
+#
+# @app.route('/api/Xuatdiem', methods=['post'])
+# def Xuatdiem():
+#     lop_id = request.json.get('lop_id')
+#     hocKi_id = request.json.get('hocKi_id')
+#     semester_1 = dao.calc_semester_score_average(lop_id=lop_id, hocKi_id=hocKi_id)
+#     semester_2 = dao.calc_semester_score_average(lop_id=lop_id, hocKi_id=int(hocKi_id) + 1)
+#     schoolyear = ''
+#     if hocKi_id == '1':
+#         schoolyear = 'Năm học 2020-2021'
+#     elif hocKi_id == '3':
+#         schoolyear = 'Năm học 2021-2022'
+#     elif hocKi_id == '5':
+#         schoolyear = 'Năm học 2022-2023'
+#     elif hocKi_id == '7':
+#         schoolyear = 'Năm học 2023-2024'
+#     result = {}
+#     result[0] = {
+#         'quantity': len(semester_1),
+#         'class': dao.get_class_by_id(lop_id).tenLop,
+#         'schoolyear': schoolyear
+#     }
+#     for i in range(len(semester_1)):
+#         result[i + 1] = {
+#             'tennHS': dao.get_student_by_id(semester_1[i]['hs_id']).name,
+#             'semester_1': semester_1[i]['diemm'],
+#             'semester_2': semester_2[i]['diemm']
+#         }
+#
+#     return result
+#
+#
+# @app.route("/Themhocsinh", methods=['POST'])
+# def Themhocsinh():
+#     err_msg = ''
+#     tenHs = request.form.get('tenHs')
+#     gioiTinh = request.form.get('gioiTinh')
+#     ngaysinh = request.form.get('ngaysinh')
+#
+#     diaChi = str(request.form.get('diaChi'))
+#     phone = request.form.get('phone')
+#     email = request.form.get('email')
+#     khoi = request.form.get('khoi')
+#     substring = email[(len(email) - 10):]
+#     if len(phone) != 10:
+#         err_msg = 'Số điện thoại sai. Vui lòng nhập lại!'
+#         return render_template('tiepnhan.html', err_msg=err_msg)
+#     if not substring.__eq__('@gmail.com'):
+#         err_msg = 'Email sai. Vui lòng nhập lại!'
+#         return render_template('tiepnhan.html', err_msg=err_msg)
+#     try:
+#         birthdate = datetime.strptime(ngaysinh, '%Y-%m-%d')
+#     except:
+#         err_msg = 'Bạn chưa nhập ngày sinh. Vui lòng thử lại!'
+#         return render_template('tiepnhan.html', err_msg=err_msg)
+#     if (app.config['nambatdau'] - birthdate.year) < app.config['mintuoi'] or (
+#             app.config['nambatdau'] - birthdate.year) > app.config['maxtuoi']:
+#         err_msg = 'Ngày sinh không hợp lệ. Vui lòng thử lại!'
+#         return render_template('tiepnhan.html', err_msg=err_msg)
+#
+#     student = HocSinh(tenHs=tenHs, gioiTinh=gioiTinh, ngaysinh=ngaysinh, diaChi=diaChi, phone=phone,
+#                       email=email)
+#     khoi = Lop(khoi_id=khoi)
+#     db.session.add(student, khoi)
+#     db.session.commit()
+#     err_msg = 'Lưu thành công'
+#     return render_template('tiepnhan.html', err_msg=err_msg)
+#
 
 if __name__ == '__main__':
     app.run(debug=True)
