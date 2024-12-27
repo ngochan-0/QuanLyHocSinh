@@ -44,3 +44,17 @@ body {
             background-color: #f4f4f4; /* Màu nền content */
             padding: 20px;
         }
+
+        .btn-custom {
+            width: bold;
+            text-decoration: none;
+            color: black;
+            border: none;
+            background: none;
+            text-align: center;
+            white-space: nowrap; /* Ngăn văn bản xuống dòng */
+            font-size: 25px;
+            padding: 5;
+            margin: 5;
+        }
+

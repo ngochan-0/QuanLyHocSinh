@@ -20,6 +20,10 @@ def nhanvien():
 def giaovien():
     return render_template('giaovien.html')
 
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
 
 @app.route('/tiepnhan')
 def tiepnhan():
@@ -41,6 +45,11 @@ def xuatdiem():
     return render_template('xuatdiem.html')
 
 
+@app.route('/quanlymonhoc')
+def quanlymonhoc():
+    return render_template('quanlymonhoc.html')
+
+
 @app.route('/login', methods=['post', 'get'])
 def signin():
     if request.method.__eq__('POST'):
@@ -59,7 +68,7 @@ def signin():
                     role = UserRoleEnum.ADMIN
                     u = dao.check_login(username=username, password=password, role=role)
                     login_user(u)
-                    return redirect('/')
+                    return redirect('/admin')
                 else:
                     role = UserRoleEnum.STAFF
                     u = dao.check_login(username=username, password=password, role=role)
